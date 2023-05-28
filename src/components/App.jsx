@@ -1,6 +1,5 @@
 import React from 'react';
 import { nanoid } from 'nanoid';
-
 import PropTypes from 'prop-types';
 
 import { Container, Title, FilterInput } from './App.styled';
@@ -16,17 +15,27 @@ export class App extends React.Component {
   };
 
   componentDidMount() {
-    const contacts = loadContacts();
-    this.setState({ contacts });
+    const LScontacts = localStorage.getItem('contacts');
+    const parsedContacts = JSON.parse(LScontacts);
+    if (parsedContacts && parsedContacts.length > 0) {
+      this.setState({ contacts: parsedContacts });
+    } else {
+      this.setState({ contacts: loadContacts() });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
   }
 
   handleAddContact = (name, number) => {
     const { contacts } = this.state;
     const newContact = { id: nanoid(), name, number };
-    const updateContacts = [...contacts, newContact];
-    this.setState({ contacts: updateContacts });
-    console.log('localStorage available:', !!window.localStorage);
-    saveContacts(updateContacts);
+    const updatedContacts = [...contacts, newContact];
+    this.setState({ contacts: updatedContacts });
+    saveContacts(updatedContacts);
   };
 
   handleDeleteContact = id => {
@@ -72,12 +81,12 @@ export class App extends React.Component {
   }
 }
 
-// App.propTypes = {
-//   contacts: PropTypes.arrayOf(
-//     PropTypes.shape({
-//       id: PropTypes.string.isRequired,
-//       name: PropTypes.string.isRequired,
-//       number: PropTypes.string.isRequired,
-//     })
-//   ).isRequired,
-// };
+App.propTypes = {
+  contacts: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      number: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+};

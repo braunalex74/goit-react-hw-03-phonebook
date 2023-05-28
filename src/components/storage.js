@@ -7,7 +7,6 @@ const defaultContacts = [
 
 const saveContacts = contacts => {
   try {
-    console.log('Saving contacts to localStorage:', contacts);
     localStorage.setItem('contacts', JSON.stringify(contacts));
   } catch (error) {
     console.error('Error saving contacts to localStorage:', error);
@@ -16,7 +15,6 @@ const saveContacts = contacts => {
 
 const loadContacts = () => {
   try {
-    console.log('Loading contacts from localStorage');
     const contactsData = localStorage.getItem('contacts');
     return contactsData ? JSON.parse(contactsData) : defaultContacts;
   } catch (error) {
