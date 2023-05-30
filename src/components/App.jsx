@@ -1,10 +1,86 @@
-// import React from 'react';
-// import { nanoid } from 'nanoid';
-// import PropTypes from 'prop-types';
+import React from 'react';
+import { nanoid } from 'nanoid';
 
-// import { Container, Title, FilterInput } from './App.styled';
-// import { ContactForm } from './ContactForm/ContactForm';
-// import ContactList from './ContactList/ContactList';
+import PropTypes from 'prop-types';
+
+import { Container, Title, FilterInput } from './App.styled';
+import { ContactForm } from './ContactForm/ContactForm';
+import ContactList from './ContactList/ContactList';
+
+export class App extends React.Component {
+  static propTypes = {
+    contacts: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        number: PropTypes.string.isRequired,
+      })
+    ).isRequired,
+  };
+
+  state = {
+    contacts: this.props.contacts,
+    filter: '',
+  };
+
+  componentDidMount() {
+    const storedContacts = localStorage.getItem('contacts');
+    if (storedContacts) {
+      this.setState({ contacts: JSON.parse(storedContacts) });
+    }
+  }
+
+  componentDidUpdate(prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
+
+  handleAddContact = (name, number) => {
+    const newContact = { id: nanoid(), name, number };
+    this.setState(prevState => ({
+      contacts: [...prevState.contacts, newContact],
+    }));
+  };
+
+  handleDeleteContact = id => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== id),
+    }));
+  };
+
+  handleFilterChange = event => {
+    this.setState({ filter: event.target.value });
+  };
+
+  render() {
+    const { contacts, filter } = this.state;
+    const filteredContacts = contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase())
+    );
+
+    return (
+      <Container>
+        <Title>Phonebook</Title>
+        <ContactForm onAdd={this.handleAddContact} contacts={contacts} />
+
+        <h2>Contacts</h2>
+        <FilterInput
+          type="text"
+          value={filter}
+          onChange={this.handleFilterChange}
+          placeholder="Search contacts..."
+        />
+
+        <ContactList
+          contacts={filteredContacts}
+          onDelete={this.handleDeleteContact}
+        />
+      </Container>
+    );
+  }
+}
+
 // import ErrorBoundary from './ErrorBoundary';
 // import { saveContacts, loadContacts } from './storage';
 
