@@ -7,27 +7,25 @@ import {
   DeleteButton,
 } from './ContactItem.styled';
 
-export default class ContactItem extends React.Component {
-  static propTypes = {
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    number: PropTypes.string.isRequired,
-    onDelete: PropTypes.func.isRequired,
-  };
-
-  handleDelete = () => {
-    const { id, onDelete } = this.props;
+function ContactItem({ id, name, number, onDelete }) {
+  const handleDelete = () => {
     onDelete(id);
   };
 
-  render() {
-    const { name, number } = this.props;
-    return (
-      <ListItem>
-        <ContactName>{name}</ContactName>
-        <ContactNumber>{number}</ContactNumber>
-        <DeleteButton onClick={this.handleDelete}>Видалити</DeleteButton>
-      </ListItem>
-    );
-  }
+  return (
+    <ListItem>
+      <ContactName>{name}</ContactName>
+      <ContactNumber>{number}</ContactNumber>
+      <DeleteButton onClick={handleDelete}>Видалити</DeleteButton>
+    </ListItem>
+  );
 }
+
+ContactItem.propTypes = {
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  number: PropTypes.string.isRequired,
+  onDelete: PropTypes.func.isRequired,
+};
+
+export default ContactItem;
