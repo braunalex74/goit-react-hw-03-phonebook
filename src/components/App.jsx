@@ -68,24 +68,12 @@ const App = () => {
         placeholder="Search contacts..."
       />
 
-      <ContactList
-        contacts={filteredContacts}
-        onDeleteContact={handleDeleteContact}
-      />
+      {/* Додайте компонент ContactList з необхідними пропсами */}
+      <ContactList contacts={filteredContacts} onDelete={handleDeleteContact} />
 
       <ToastContainer />
     </Container>
   );
-};
-
-App.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ).isRequired,
 };
 
 App.propTypes = {

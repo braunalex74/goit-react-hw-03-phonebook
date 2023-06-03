@@ -81,4 +81,4 @@ ContactForm.propTypes = {
   ).isRequired,
 };
 
-export default ContactForm;
+// export default ContactForm;
