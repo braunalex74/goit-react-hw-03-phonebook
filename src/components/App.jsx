@@ -88,6 +88,16 @@ App.propTypes = {
   ).isRequired,
 };
 
+App.propTypes = {
+  contacts: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      number: PropTypes.string.isRequired,
+    })
+  ).isRequired,
+};
+
 export default App;
 
 // import ErrorBoundary from './ErrorBoundary';
