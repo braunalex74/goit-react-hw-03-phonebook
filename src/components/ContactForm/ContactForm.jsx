@@ -3,39 +3,46 @@ import PropTypes from 'prop-types';
 
 import { Form } from './ContactForm.styled';
 
-export class ContactForm extends React.Component {
-  state = {
-    name: '',
-    number: '',
-  };
+class ContactForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      number: '',
+    };
+  }
 
   handleSubmit = event => {
     event.preventDefault();
+
     const { name, number } = this.state;
+    const { contacts, onAddContact } = this.props;
 
-    if (this.isContactExist(name)) {
-      alert(`${name} is already in contacts.`);
-      return;
-    }
-
-    this.props.onAdd(name, number);
-    this.setState({ name: '', number: '' });
-  };
-
-  handleChange = event => {
-    const { name, value } = event.target;
-    this.setState({ [name]: value });
-  };
-
-  isContactExist(name) {
-    const { contacts } = this.props;
-    return contacts.some(
-      contact => contact.name.toLowerCase() === name.toLowerCase()
+    const isDuplicate = contacts.some(
+      contact =>
+        contact.name.toLowerCase().trim() === name.toLowerCase().trim() ||
+        contact.number.trim() === number.trim()
     );
-  }
+
+    if (isDuplicate) {
+      alert(`${name} is already in contacts.`);
+    } else {
+      onAddContact(name, number);
+      this.setState({ name: '', number: '' });
+    }
+  };
+
+  handleNameChange = event => {
+    this.setState({ name: event.target.value });
+  };
+
+  handleNumberChange = event => {
+    this.setState({ number: event.target.value });
+  };
 
   render() {
     const { name, number } = this.state;
+
     return (
       <Form onSubmit={this.handleSubmit}>
         <label>
@@ -47,7 +54,7 @@ export class ContactForm extends React.Component {
             title="Name may contain only letters, apostrophe, dash and spaces."
             required
             value={name}
-            onChange={this.handleChange}
+            onChange={this.handleNameChange}
           />
         </label>
         <br />
@@ -60,7 +67,7 @@ export class ContactForm extends React.Component {
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required
             value={number}
-            onChange={this.handleChange}
+            onChange={this.handleNumberChange}
           />
         </label>
         <br />
@@ -71,7 +78,7 @@ export class ContactForm extends React.Component {
 }
 
 ContactForm.propTypes = {
-  onAdd: PropTypes.func.isRequired,
+  onAddContact: PropTypes.func.isRequired,
   contacts: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
@@ -81,4 +88,4 @@ ContactForm.propTypes = {
   ).isRequired,
 };
 
-// export default ContactForm;
+export default ContactForm;

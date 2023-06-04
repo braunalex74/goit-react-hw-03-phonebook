@@ -8,15 +8,11 @@ import {
 } from './ContactItem.styled';
 
 function ContactItem({ id, name, number, onDelete }) {
-  const handleDelete = () => {
-    onDelete(id);
-  };
-
   return (
     <ListItem>
       <ContactName>{name}</ContactName>
       <ContactNumber>{number}</ContactNumber>
-      <DeleteButton onClick={handleDelete}>Видалити</DeleteButton>
+      <DeleteButton onClick={() => onDelete(id)}>Видалити</DeleteButton>
     </ListItem>
   );
 }
