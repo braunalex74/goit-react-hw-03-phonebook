@@ -7,13 +7,10 @@ import ContactForm from './ContactForm/ContactForm';
 import ContactList from './ContactList/ContactList';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      contacts: initialContacts,
-      filter: '',
-    };
-  }
+  state = {
+    contacts: initialContacts,
+    filter: '',
+  };
 
   componentDidMount() {
     const storedContacts = localStorage.getItem('contacts');
@@ -32,7 +29,6 @@ class App extends Component {
   handleAddContact = (name, number) => {
     const { contacts } = this.state;
     const newContact = { id: nanoid(), name, number };
-
     const isDuplicate = contacts.some(
       contact =>
         contact.name.toLowerCase().trim() === name.toLowerCase().trim() ||
@@ -60,7 +56,6 @@ class App extends Component {
 
   render() {
     const { contacts, filter } = this.state;
-
     const filteredContacts = contacts.filter(contact =>
       contact.name.toLowerCase().includes(filter.toLowerCase())
     );
